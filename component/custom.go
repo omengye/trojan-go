@@ -11,7 +11,6 @@ import (
 	_ "github.com/p4gefau1t/trojan-go/tunnel/http"
 	_ "github.com/p4gefau1t/trojan-go/tunnel/mux"
 	_ "github.com/p4gefau1t/trojan-go/tunnel/router"
-	_ "github.com/p4gefau1t/trojan-go/tunnel/shadowsocks"
 	_ "github.com/p4gefau1t/trojan-go/tunnel/simplesocks"
 	_ "github.com/p4gefau1t/trojan-go/tunnel/socks"
 	_ "github.com/p4gefau1t/trojan-go/tunnel/tls"

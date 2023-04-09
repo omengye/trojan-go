@@ -19,14 +19,7 @@ var validTypes = map[string]struct{}{
 }
 
 var validEncryptionProviders = map[string]struct{}{
-	"ss":   {},
 	"none": {},
-}
-
-var validSSEncryptionMap = map[string]struct{}{
-	"aes-128-gcm":            {},
-	"aes-256-gcm":            {},
-	"chacha20-ietf-poly1305": {},
 }
 
 type ShareInfo struct {
@@ -158,29 +151,6 @@ func NewShareInfoFromURL(shareLink string) (info ShareInfo, e error) {
 			return
 		}
 
-		var encryptionParams string
-		if len(encryptionParts) >= 2 {
-			encryptionParams = encryptionParts[1]
-		}
-
-		if encryptionProviderName == "ss" {
-			ssParams := strings.SplitN(encryptionParams, ":", 2)
-			if len(ssParams) < 2 {
-				e = errors.New("missing ss password")
-				return
-			}
-
-			ssMethod, ssPassword := ssParams[0], ssParams[1]
-			if _, ok := validSSEncryptionMap[ssMethod]; !ok {
-				e = fmt.Errorf("unsupported ss method: %s", ssMethod)
-				return
-			}
-
-			if ssPassword == "" {
-				e = errors.New("ss password cannot be empty")
-				return
-			}
-		}
 	}
 
 	// plugin

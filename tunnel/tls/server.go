@@ -278,6 +278,7 @@ func loadKeyPair(keyPath string, certPath string, password string) (*tls.Certifi
 	}
 	keyPair, err := tls.LoadX509KeyPair(certPath, keyPath)
 	if err != nil {
+		log.Errorf("load cert error: %v", err.Error())
 		return nil, common.NewError("failed to load key pair").Base(err)
 	}
 	keyPair.Leaf, err = x509.ParseCertificate(keyPair.Certificate[0])

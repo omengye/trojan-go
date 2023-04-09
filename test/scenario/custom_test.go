@@ -170,15 +170,6 @@ outbound:
         password:
           - "12345678"
 
-    - protocol: shadowsocks
-      tag: shadowsocks
-      config:
-        remote-addr: 127.0.0.1
-        remote-port: 80
-        shadowsocks:
-          enabled: true
-          password: "12345678"
-
     - protocol: websocket
       tag: websocket
       config:
@@ -191,7 +182,6 @@ outbound:
       - transport
       - tls
       - websocket
-      - shadowsocks 
       - trojan
 
 `, socksPort, socksPort, serverPort)
@@ -245,40 +235,20 @@ inbound:
     - protocol: simplesocks
       tag: simplesocks
 
-    - protocol: shadowsocks
-      tag: shadowsocks
-      config:
-        remote-addr: 127.0.0.1
-        remote-port: 80
-        shadowsocks:
-          enabled: true
-          password: "12345678"
-
-    - protocol: shadowsocks
-      tag: shadowsocks2
-      config:
-        remote-addr: 127.0.0.1
-        remote-port: 80
-        shadowsocks:
-          enabled: true
-          password: "12345678"
      
   path:
     - 
       - transport
       - tls
-      - shadowsocks 
       - trojan
     - 
       - transport
       - tls
       - websocket
-      - shadowsocks2
       - trojan2
     - 
       - transport
       - tls
-      - shadowsocks
       - trojan
       - mux
       - simplesocks

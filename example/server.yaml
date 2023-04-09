@@ -3,8 +3,15 @@ local-addr: 0.0.0.0
 local-port: 443
 remote-addr: 127.0.0.1
 remote-port: 80
+#设置disable-http-check=true时可不需配置remote-addr和remote-port
+#disable-http-check: true
 password:
   - your_password
+#设置server端出口代理
+#forward-proxy:
+#  enabled: true
+#  proxy-addr: 127.0.0.1
+#  proxy-port: 11032
 ssl:
   cert: your_cert.crt
   key: your_key.key

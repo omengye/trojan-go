@@ -101,6 +101,7 @@ func (s *Server) handshake(conn net.Conn) (*Conn, error) {
 }
 
 func (s *Server) connect(conn net.Conn) error {
+
 	_, err := conn.Write([]byte{0x05, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00})
 	return err
 }

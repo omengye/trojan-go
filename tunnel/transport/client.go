@@ -2,15 +2,13 @@ package transport
 
 import (
 	"context"
-	"os"
-	"os/exec"
-	"strconv"
-
 	"github.com/p4gefau1t/trojan-go/common"
 	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/log"
 	"github.com/p4gefau1t/trojan-go/tunnel"
 	"github.com/p4gefau1t/trojan-go/tunnel/freedom"
+	"os"
+	"os/exec"
 )
 
 // Client implements tunnel.Client
@@ -55,28 +53,6 @@ func NewClient(ctx context.Context, _ tunnel.Client) (*Client, error) {
 	if cfg.TransportPlugin.Enabled {
 		log.Warn("trojan-go will use transport plugin and work in plain text mode")
 		switch cfg.TransportPlugin.Type {
-		case "shadowsocks":
-			pluginHost := "127.0.0.1"
-			pluginPort := common.PickPort("tcp", pluginHost)
-			cfg.TransportPlugin.Env = append(
-				cfg.TransportPlugin.Env,
-				"SS_LOCAL_HOST="+pluginHost,
-				"SS_LOCAL_PORT="+strconv.FormatInt(int64(pluginPort), 10),
-				"SS_REMOTE_HOST="+cfg.RemoteHost,
-				"SS_REMOTE_PORT="+strconv.FormatInt(int64(cfg.RemotePort), 10),
-				"SS_PLUGIN_OPTIONS="+cfg.TransportPlugin.Option,
-			)
-			cfg.RemoteHost = pluginHost
-			cfg.RemotePort = pluginPort
-			serverAddress = tunnel.NewAddressFromHostPort("tcp", cfg.RemoteHost, cfg.RemotePort)
-			log.Debug("plugin address", serverAddress.String())
-			log.Debug("plugin env", cfg.TransportPlugin.Env)
-
-			cmd = exec.Command(cfg.TransportPlugin.Command, cfg.TransportPlugin.Arg...)
-			cmd.Env = append(cmd.Env, cfg.TransportPlugin.Env...)
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stdout
-			cmd.Start()
 		case "other":
 			cmd = exec.Command(cfg.TransportPlugin.Command, cfg.TransportPlugin.Arg...)
 			cmd.Env = append(cmd.Env, cfg.TransportPlugin.Env...)
