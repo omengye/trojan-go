@@ -8,7 +8,6 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"io"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"os"
@@ -29,26 +28,25 @@ import (
 
 // Server is a tls server
 type Server struct {
-	fallbackAddress    *tunnel.Address
-	verifySNI          bool
-	sni                string
-	alpn               []string
-	PreferServerCipher bool
-	keyPair            []tls.Certificate
-	keyPairLock        sync.RWMutex
-	httpResp           []byte
-	cipherSuite        []uint16
-	sessionTicket      bool
-	curve              []tls.CurveID
-	keyLogger          io.WriteCloser
-	connChan           chan tunnel.Conn
-	wsChan             chan tunnel.Conn
-	redir              *redirector.Redirector
-	ctx                context.Context
-	cancel             context.CancelFunc
-	underlay           tunnel.Server
-	nextHTTP           int32
-	portOverrider      map[string]int
+	fallbackAddress *tunnel.Address
+	verifySNI       bool
+	sni             string
+	alpn            []string
+	keyPair         []tls.Certificate
+	keyPairLock     sync.RWMutex
+	httpResp        []byte
+	cipherSuite     []uint16
+	sessionTicket   bool
+	curve           []tls.CurveID
+	keyLogger       io.WriteCloser
+	connChan        chan tunnel.Conn
+	wsChan          chan tunnel.Conn
+	redir           *redirector.Redirector
+	ctx             context.Context
+	cancel          context.CancelFunc
+	underlay        tunnel.Server
+	nextHTTP        int32
+	portOverrider   map[string]int
 }
 
 func (s *Server) Close() error {
@@ -81,11 +79,10 @@ func (s *Server) acceptLoop() {
 		}
 		go func(conn net.Conn) {
 			tlsConfig := &tls.Config{
-				CipherSuites:             s.cipherSuite,
-				PreferServerCipherSuites: s.PreferServerCipher,
-				SessionTicketsDisabled:   !s.sessionTicket,
-				NextProtos:               s.alpn,
-				KeyLogWriter:             s.keyLogger,
+				CipherSuites:           s.cipherSuite,
+				SessionTicketsDisabled: !s.sessionTicket,
+				NextProtos:             s.alpn,
+				KeyLogWriter:           s.keyLogger,
 				GetCertificate: func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
 					s.keyPairLock.RLock()
 					defer s.keyPairLock.RUnlock()
@@ -209,12 +206,12 @@ func (s *Server) checkKeyPairLoop(checkRate time.Duration, keyPath string, certP
 
 	for {
 		log.Debug("checking cert...")
-		keyBytes, err := ioutil.ReadFile(keyPath)
+		keyBytes, err := os.ReadFile(keyPath)
 		if err != nil {
 			log.Error(common.NewError("tls failed to check key").Base(err))
 			continue
 		}
-		certBytes, err := ioutil.ReadFile(certPath)
+		certBytes, err := os.ReadFile(certPath)
 		if err != nil {
 			log.Error(common.NewError("tls failed to check cert").Base(err))
 			continue
@@ -246,7 +243,7 @@ func (s *Server) checkKeyPairLoop(checkRate time.Duration, keyPath string, certP
 
 func loadKeyPair(keyPath string, certPath string, password string) (*tls.Certificate, error) {
 	if password != "" {
-		keyFile, err := ioutil.ReadFile(keyPath)
+		keyFile, err := os.ReadFile(keyPath)
 		if err != nil {
 			return nil, common.NewError("failed to load key file").Base(err)
 		}
@@ -259,7 +256,7 @@ func loadKeyPair(keyPath string, certPath string, password string) (*tls.Certifi
 			return nil, common.NewError("failed to decrypt key").Base(err)
 		}
 
-		certFile, err := ioutil.ReadFile(certPath)
+		certFile, err := os.ReadFile(certPath)
 		certBlock, _ := pem.Decode(certFile)
 		if certBlock == nil {
 			return nil, common.NewError("failed to decode cert file").Base(err)
@@ -308,7 +305,7 @@ func NewServer(ctx context.Context, underlay tunnel.Server) (*Server, error) {
 	} else {
 		log.Warn("empty tls fallback port")
 		if cfg.TLS.HTTPResponseFileName != "" {
-			httpRespBody, err := ioutil.ReadFile(cfg.TLS.HTTPResponseFileName)
+			httpRespBody, err := os.ReadFile(cfg.TLS.HTTPResponseFileName)
 			if err != nil {
 				return nil, common.NewError("invalid response file").Base(err)
 			}
@@ -340,22 +337,21 @@ func NewServer(ctx context.Context, underlay tunnel.Server) (*Server, error) {
 
 	ctx, cancel := context.WithCancel(ctx)
 	server := &Server{
-		underlay:           underlay,
-		fallbackAddress:    fallbackAddress,
-		httpResp:           httpResp,
-		verifySNI:          cfg.TLS.VerifyHostName,
-		sni:                cfg.TLS.SNI,
-		alpn:               cfg.TLS.ALPN,
-		PreferServerCipher: cfg.TLS.PreferServerCipher,
-		sessionTicket:      cfg.TLS.ReuseSession,
-		connChan:           make(chan tunnel.Conn, 32),
-		wsChan:             make(chan tunnel.Conn, 32),
-		redir:              redirector.NewRedirector(ctx),
-		keyPair:            []tls.Certificate{*keyPair},
-		keyLogger:          keyLogger,
-		cipherSuite:        cipherSuite,
-		ctx:                ctx,
-		cancel:             cancel,
+		underlay:        underlay,
+		fallbackAddress: fallbackAddress,
+		httpResp:        httpResp,
+		verifySNI:       cfg.TLS.VerifyHostName,
+		sni:             cfg.TLS.SNI,
+		alpn:            cfg.TLS.ALPN,
+		sessionTicket:   cfg.TLS.ReuseSession,
+		connChan:        make(chan tunnel.Conn, 32),
+		wsChan:          make(chan tunnel.Conn, 32),
+		redir:           redirector.NewRedirector(ctx),
+		keyPair:         []tls.Certificate{*keyPair},
+		keyLogger:       keyLogger,
+		cipherSuite:     cipherSuite,
+		ctx:             ctx,
+		cancel:          cancel,
 	}
 
 	go server.acceptLoop()
