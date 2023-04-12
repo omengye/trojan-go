@@ -6,8 +6,6 @@ name: Go
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
 
@@ -21,8 +19,7 @@ jobs:
       with:
         go-version: 1.20
 
-
     - name: Build
       run: |
-        make release -j$(nproc)
+        make release-linux-amd64 -j$(nproc)
 
