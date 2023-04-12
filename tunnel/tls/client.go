@@ -6,7 +6,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"io"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	utls "github.com/refraction-networking/utls"
@@ -87,7 +87,9 @@ func (c *Client) DialConn(_ *tunnel.Address, overlay tunnel.Tunnel) (tunnel.Conn
 func NewClient(ctx context.Context, underlay tunnel.Client) (*Client, error) {
 	cfg := config.FromContext(ctx, Name).(*Config)
 
-	helloID := utls.ClientHelloID{}
+	//helloID := utls.ClientHelloID{}
+	// Generating randomized fingerprints
+	helloID := utls.HelloRandomized
 	if cfg.TLS.Fingerprint != "" {
 		switch cfg.TLS.Fingerprint {
 		case "firefox":
@@ -118,7 +120,7 @@ func NewClient(ctx context.Context, underlay tunnel.Client) (*Client, error) {
 	}
 
 	if cfg.TLS.CertPath != "" {
-		caCertByte, err := ioutil.ReadFile(cfg.TLS.CertPath)
+		caCertByte, err := os.ReadFile(cfg.TLS.CertPath)
 		if err != nil {
 			return nil, common.NewError("failed to load cert file").Base(err)
 		}
