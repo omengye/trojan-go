@@ -1,12 +1,8 @@
 NAME := trojan-go
-PACKAGE_NAME := github.com/omengye/trojan-go
-VERSION := `git describe --dirty`
-COMMIT := `git rev-parse HEAD`
 
 PLATFORM := linux
 BUILD_DIR := build
-VAR_SETTING := -X $(PACKAGE_NAME)/constant.Version=$(VERSION) -X $(PACKAGE_NAME)/constant.Commit=$(COMMIT)
-GOBUILD = env CGO_ENABLED=0 $(GO_DIR)go build -tags "full" -ldflags="-s -w -buildid= $(VAR_SETTING)" -o $(BUILD_DIR)
+GOBUILD = env CGO_ENABLED=0 $(GO_DIR)go build -tags "full" -ldflags="-s -w" -o $(BUILD_DIR)
 
 .PHONY: trojan-go release test
 normal: clean trojan-go
