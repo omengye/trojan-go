@@ -91,15 +91,17 @@ func (s *Server) acceptLoop() {
 					if s.sni != "" {
 						sni = s.sni
 					}
-					matched := isDomainNameMatched(sni, hello.ServerName)
-					for _, name := range dnsNames {
-						if isDomainNameMatched(name, hello.ServerName) {
-							matched = true
-							break
+					if s.verifySNI {
+						matched := isDomainNameMatched(sni, hello.ServerName)
+						for _, name := range dnsNames {
+							if isDomainNameMatched(name, hello.ServerName) {
+								matched = true
+								break
+							}
 						}
-					}
-					if s.verifySNI && !matched {
-						return nil, common.NewError("sni mismatched: " + hello.ServerName + ", expected: " + s.sni)
+						if !matched {
+							return nil, common.NewError("sni mismatched: " + hello.ServerName + ", expected: " + s.sni)
+						}
 					}
 					return &s.keyPair[0], nil
 				},
