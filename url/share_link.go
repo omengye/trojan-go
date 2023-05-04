@@ -150,7 +150,6 @@ func NewShareInfoFromURL(shareLink string) (info ShareInfo, e error) {
 			e = fmt.Errorf("unsupported encryption provider name: %s", encryptionProviderName)
 			return
 		}
-
 	}
 
 	// plugin

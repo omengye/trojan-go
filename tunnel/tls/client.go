@@ -87,7 +87,7 @@ func (c *Client) DialConn(_ *tunnel.Address, overlay tunnel.Tunnel) (tunnel.Conn
 func NewClient(ctx context.Context, underlay tunnel.Client) (*Client, error) {
 	cfg := config.FromContext(ctx, Name).(*Config)
 
-	//helloID := utls.ClientHelloID{}
+	// helloID := utls.ClientHelloID{}
 	// Generating randomized fingerprints
 	helloID := utls.HelloRandomized
 	if cfg.TLS.Fingerprint != "" {
