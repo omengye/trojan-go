@@ -2,6 +2,7 @@ package socks
 
 import (
 	"context"
+
 	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/tunnel/trojan"
 	"golang.org/x/net/proxy"
@@ -18,18 +19,6 @@ type Client struct {
 }
 
 func (c *Client) DialConn(addr *tunnel.Address, t tunnel.Tunnel) (tunnel.Conn, error) {
-	//conn, err := c.underlay.DialConn(addr, &Tunnel{})
-	//if err != nil {
-	//	return nil, common.NewError("socks failed to dial using underlying tunnel").Base(err)
-	//}
-	//return &Conn{
-	//	Conn: conn,
-	//	metadata: &tunnel.Metadata{
-	//		Command: Associate,
-	//		Address: addr,
-	//	},
-	//}, nil
-
 	dialer, err := proxy.SOCKS5("tcp", c.proxyAddr.String(), c.auth, proxy.Direct)
 	if err != nil {
 		return nil, common.NewError("failed to init socks dialer")
@@ -45,10 +34,6 @@ func (c *Client) DialConn(addr *tunnel.Address, t tunnel.Tunnel) (tunnel.Conn, e
 			Address: addr,
 		},
 	}, nil
-
-	//return &trojan.OutboundConn{
-	//	Conn: dialConn,
-	//}, nil
 }
 
 func (c *Client) DialPacket(t tunnel.Tunnel) (tunnel.PacketConn, error) {

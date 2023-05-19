@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+
 	"github.com/p4gefau1t/trojan-go/tunnel/websocket"
 
 	"github.com/p4gefau1t/trojan-go/config"
