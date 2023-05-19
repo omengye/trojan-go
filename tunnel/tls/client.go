@@ -57,6 +57,7 @@ func (c *Client) DialConn(_ *tunnel.Address, overlay tunnel.Tunnel) (tunnel.Conn
 			ServerName:         c.sni,
 			InsecureSkipVerify: !c.verify,
 			KeyLogWriter:       c.keyLogger,
+			MinVersion:         utls.VersionTLS12,
 		}, c.helloID)
 		if err := tlsConn.Handshake(); err != nil {
 			return nil, common.NewError("tls failed to handshake with remote server").Base(err)
@@ -73,6 +74,7 @@ func (c *Client) DialConn(_ *tunnel.Address, overlay tunnel.Tunnel) (tunnel.Conn
 		KeyLogWriter:           c.keyLogger,
 		CipherSuites:           c.cipher,
 		SessionTicketsDisabled: !c.sessionTicket,
+		MinVersion:             utls.VersionTLS12,
 	})
 	err = tlsConn.Handshake()
 	if err != nil {

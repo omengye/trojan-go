@@ -18,6 +18,8 @@ func main() {
 		err = h.Handle()
 		if err == nil {
 			break
+		} else {
+			log.Error(err)
 		}
 	}
 }

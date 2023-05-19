@@ -14,7 +14,6 @@ linters:
     - gocritic
     - gofmt
     - gofumpt
-    - goimports
     - govet
     - ineffassign
     - misspell
@@ -27,6 +26,7 @@ linters:
     - errcheck
     - goprintffuncname
     - gosimple
+    - goimports
     - nilerr
     - rowserrcheck
     - staticcheck

@@ -14,8 +14,8 @@ func (*Tunnel) Name() string {
 	return Name
 }
 
-func (*Tunnel) NewClient(context.Context, tunnel.Client) (tunnel.Client, error) {
-	panic("not supported")
+func (*Tunnel) NewClient(ctx context.Context, client tunnel.Client) (tunnel.Client, error) {
+	return NewClient(ctx, client)
 }
 
 func (*Tunnel) NewServer(ctx context.Context, server tunnel.Server) (tunnel.Server, error) {
