@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-
 	_ "github.com/p4gefau1t/trojan-go/component"
 	"github.com/p4gefau1t/trojan-go/log"
 	"github.com/p4gefau1t/trojan-go/option"
@@ -18,6 +17,8 @@ func main() {
 		err = h.Handle()
 		if err == nil {
 			break
+		} else {
+			log.Error(err)
 		}
 	}
 }

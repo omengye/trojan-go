@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"github.com/p4gefau1t/trojan-go/tunnel/websocket"
 
 	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/proxy"
@@ -46,6 +47,10 @@ func init() {
 		trojanSubTree := root
 		trojanSubTree.BuildNext(trojan.Name).BuildNext(mux.Name).BuildNext(simplesocks.Name).IsEndpoint = true
 		trojanSubTree.BuildNext(trojan.Name).IsEndpoint = true
+
+		wsSubTree := root.BuildNext(websocket.Name)
+		wsSubTree.BuildNext(trojan.Name).BuildNext(mux.Name).BuildNext(simplesocks.Name).IsEndpoint = true
+		wsSubTree.BuildNext(trojan.Name).IsEndpoint = true
 
 		serverList := proxy.FindAllEndpoints(root)
 		clientList, err := proxy.CreateClientStack(ctx, clientStack)

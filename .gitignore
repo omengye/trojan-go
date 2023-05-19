@@ -21,6 +21,6 @@ build/
 *.crt
 *.key
 *.dat
-trojan-go
+trojan-go.exe
 example_test/
 .idea

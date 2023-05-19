@@ -3,12 +3,10 @@ module github.com/p4gefau1t/trojan-go
 go 1.19
 
 require (
-	github.com/go-sql-driver/mysql v1.6.0
 	github.com/refraction-networking/utls v1.3.2
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/stretchr/testify v1.8.1
 	github.com/txthinking/socks5 v0.0.0-20230325130024-4230056ae301
-	github.com/v2fly/v2ray-core/v4 v4.45.2
 	github.com/v2fly/v2ray-core/v5 v5.3.0
 	github.com/xtaci/smux v1.5.15
 	golang.org/x/net v0.7.0

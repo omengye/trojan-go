@@ -41,7 +41,7 @@ func init() {
 				Verify:         true,
 				VerifyHostName: true,
 				Fingerprint:    "",
-				ALPN:           []string{"http/1.1"},
+				ALPN:           []string{"h2"},
 			},
 		}
 	})

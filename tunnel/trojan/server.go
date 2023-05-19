@@ -14,7 +14,6 @@ import (
 	"github.com/p4gefau1t/trojan-go/redirector"
 	"github.com/p4gefau1t/trojan-go/statistic"
 	"github.com/p4gefau1t/trojan-go/statistic/memory"
-	"github.com/p4gefau1t/trojan-go/statistic/mysql"
 	"github.com/p4gefau1t/trojan-go/tunnel"
 	"github.com/p4gefau1t/trojan-go/tunnel/mux"
 )
@@ -217,13 +216,8 @@ func NewServer(ctx context.Context, underlay tunnel.Server) (*Server, error) {
 	// TODO replace this dirty code
 	var auth statistic.Authenticator
 	var err error
-	if cfg.MySQL.Enabled {
-		log.Debug("mysql enabled")
-		auth, err = statistic.NewAuthenticator(ctx, mysql.Name)
-	} else {
-		log.Debug("auth by config file")
-		auth, err = statistic.NewAuthenticator(ctx, memory.Name)
-	}
+	log.Debug("auth by config file")
+	auth, err = statistic.NewAuthenticator(ctx, memory.Name)
 	if err != nil {
 		cancel()
 		return nil, common.NewError("trojan failed to create authenticator")
